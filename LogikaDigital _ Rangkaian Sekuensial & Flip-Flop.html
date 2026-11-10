@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>LogikaDigital | Rangkaian Sekuensial &amp; Flip-Flop</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#050510;--pan:rgba(15,23,42,.78);--ln:rgba(37,99,235,.4);--tx:#e2e8f0;--mu:#94a3b8;--ac:#00e5ff;--dk:#0a192f;--wn:#ef4444;--ok:#34d399;--led:#14202e;--grid:rgba(0,229,255,.05);color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#eef3f8;--pan:rgba(255,255,255,.85);--ln:rgba(0,122,138,.35);--tx:#0f1b2d;--mu:#526379;--ac:#007a8a;--dk:#e3edf5;--led:#cfd9e3;--grid:rgba(0,122,138,.07);color-scheme:light}}
+:root[data-theme="dark"]{--bg:#050510;--pan:rgba(15,23,42,.78);--tx:#e2e8f0;--mu:#94a3b8;--ac:#00e5ff;--dk:#0a192f;--led:#14202e;color-scheme:dark}
+html{scroll-behavior:smooth;scroll-padding-top:calc(70px + env(safe-area-inset-top,0px))}
+*{box-sizing:border-box;margin:0}
+body{font:16px/1.7 Inter,system-ui,sans-serif;color:var(--tx);background:radial-gradient(circle at 15% 0,rgba(0,229,255,.1),transparent 40%),repeating-linear-gradient(0deg,var(--grid) 0 1px,transparent 1px 36px),repeating-linear-gradient(90deg,var(--grid) 0 1px,transparent 1px 36px),var(--bg)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--pan);z-index:10}
+.glass{background:var(--pan);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid var(--ln);border-radius:12px}
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;display:flex;gap:6px 22px;align-items:center;padding:12px 5%;border-radius:0;border-width:0 0 1px;overflow-x:auto;white-space:nowrap}
+nav b{font-size:1.2rem;margin-right:auto}nav b span{color:var(--ac)}
+nav a{color:var(--mu);text-decoration:none;font-size:.9rem}nav a:hover{color:var(--ac)}
+main{max-width:1100px;margin:0 auto;padding:0 20px 60px}
+section{margin-top:56px}
+h1{font-size:clamp(28px,5vw,46px);line-height:1.15;letter-spacing:-.02em}
+h2{font-size:1.6rem;margin-bottom:6px}h2+.sub{color:var(--mu);margin-bottom:20px}
+h3{color:var(--ac);font-size:1.05rem;margin-bottom:8px}
+p{margin-bottom:14px}
+code,.mono{font-family:"Fira Code",monospace}
+code{background:rgba(0,0,0,.3);color:var(--ac);padding:2px 6px;border-radius:4px;font-size:.9em}
+.hero{display:grid;grid-template-columns:1.2fr 1fr;gap:30px;align-items:center;padding:46px 0 0}
+.hero .lead{color:var(--mu);font-size:1.1rem;margin:14px 0 20px}
+.k{font:600 12px "Fira Code",monospace;letter-spacing:.1em;color:var(--ac);text-transform:uppercase}
+.btn{display:inline-block;background:var(--ac);color:var(--bg);font-weight:700;padding:10px 20px;border-radius:8px;text-decoration:none}
+.wave{padding:16px}.wave path{stroke-dasharray:900;animation:dash 6s linear infinite}
+@keyframes dash{from{stroke-dashoffset:900}to{stroke-dashoffset:0}}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.card{padding:20px}.card .ic{font:600 1.4rem "Fira Code",monospace;color:var(--ac);margin-bottom:6px}
+.card p{color:var(--mu);font-size:.95rem;margin:0}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.tab{font:600 1rem "Fira Code",monospace;background:var(--dk);color:var(--mu);border:1px solid var(--ln);border-radius:8px;padding:8px 18px;cursor:pointer}
+.tab.on{color:var(--bg);background:var(--ac);border-color:var(--ac)}
+.sim{display:grid;grid-template-columns:1fr 1fr;gap:20px;padding:24px}
+.eq{display:block;text-align:center;font:500 1.05rem "Fira Code",monospace;background:rgba(37,99,235,.14);padding:10px;border-radius:8px;margin:10px 0 14px}
+#sym{max-width:230px;margin:0 auto 10px;color:var(--tx)}#sym svg{width:100%;height:auto}
+table{width:100%;border-collapse:collapse;font-size:.9rem;text-align:center}
+td,th{border:1px solid var(--ln);padding:6px}th{color:var(--ac);background:rgba(0,229,255,.08)}
+tr.hl td{background:rgba(0,229,255,.18)}
+.lb,.cb{font:600 1.05rem "Fira Code",monospace;background:var(--dk);color:var(--ac);border:1px solid var(--ln);border-radius:8px;padding:11px 16px;cursor:pointer;display:flex;justify-content:space-between;gap:12px;width:100%;transition:transform .12s,border-color .2s}
+.lb:hover,.cb:hover{border-color:var(--ac)}.lb:active,.cb:active{transform:scale(.96)}
+.lb b{color:var(--tx)}
+#ins{display:flex;gap:10px;margin-bottom:10px}.cb{justify-content:center;background:rgba(0,229,255,.14);color:var(--tx)}
+.cb.ready{border-color:var(--ac);animation:pul 1.5s infinite}
+@keyframes pul{70%{box-shadow:0 0 0 12px transparent}0%{box-shadow:0 0 0 0 rgba(0,229,255,.45)}}
+.out{display:flex;gap:26px;align-items:center;margin:14px 0;font:500 1.3rem "Fira Code",monospace;flex-wrap:wrap}
+.led{display:inline-block;width:16px;height:16px;border-radius:50%;background:var(--led);margin-left:8px;vertical-align:middle;transition:.3s}
+.led.on{background:var(--ac);box-shadow:0 0 12px var(--ac)}
+.warn{display:none;border-left:4px solid var(--wn);background:rgba(239,68,68,.14);padding:12px 14px;border-radius:0 8px 8px 0;font-size:.92rem;margin-bottom:10px}
+.warn.show{display:block;animation:shk .4s}
+@keyframes shk{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.tm{overflow-x:auto;background:rgba(0,0,0,.2);border-radius:8px;padding:6px;min-height:60px}.tm svg{display:block}
+.note{font-size:.85rem;color:var(--mu)}
+.lbl{display:grid;grid-template-columns:1fr 1fr;gap:20px;padding:24px}
+.box{background:rgba(0,0,0,.2);border-radius:10px;padding:16px;text-align:center}
+.box .v{font:600 2rem "Fira Code",monospace;color:var(--ac)}
+.ctrl{display:flex;gap:10px;margin:12px 0}
+.leds{display:flex;gap:18px;justify-content:center;margin:16px 0}
+.leds div{text-align:center;font:.8rem "Fira Code",monospace;color:var(--mu)}.leds .led{width:34px;height:34px;display:block;margin:0 auto 6px}
+.q{padding:18px;margin-bottom:14px}.q button{display:block;width:100%;text-align:left;margin-top:8px;background:var(--dk);color:var(--tx);border:1px solid var(--ln);border-radius:8px;padding:9px 14px;cursor:pointer;font:inherit}
+.q button:hover:not(:disabled){border-color:var(--ac)}.q button:disabled{cursor:default}
+.q .good{border-color:var(--ok);background:rgba(52,211,153,.15)}.q .bad{border-color:var(--wn);background:rgba(239,68,68,.15)}
+.ex{margin-top:10px;font-size:.92rem;color:var(--mu)}
+footer{max-width:1100px;margin:0 auto;padding:0 20px 40px}footer p{color:var(--mu);font-size:.85rem}
+.bg{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden;opacity:.8}.bg svg{width:100%;height:100%;display:block}
+.st{animation:tw 4s ease-in-out infinite}@keyframes tw{50%{opacity:.12}}
+.gr{transform-box:fill-box;transform-origin:center;animation:rot 40s linear infinite}.gr.rv{animation-direction:reverse;animation-duration:26s}@keyframes rot{to{transform:rotate(360deg)}}
+.tr{stroke-dasharray:10 14;animation:fl 2s linear infinite}@keyframes fl{to{stroke-dashoffset:-48}}
+.nm{filter:url(#gl)}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]) .bg{opacity:.4}}
+#more{margin-top:16px}#more p{color:var(--mu);font-size:.95rem}
+.tw{overflow-x:auto}.tw table{min-width:520px}
+@media (max-width:760px){.hero,.sim,.lbl{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="bg" id="bg" aria-hidden="true"></div><nav class="glass"><b>Logika<span>Digital</span></b><a href="#dasar">Dasar</a><a href="#prinsip">Prinsip</a><a href="#jenis">Jenis &amp; Simulator</a><a href="#latch">Latch vs FF</a><a href="#counter">Counter</a><a href="#aplikasi">Aplikasi</a></nav>
+<main>
+<div class="hero">
+ <div><span class="k">Elektronika digital</span><h1>Flip-Flop: memori 1-bit di balik semua sistem digital</h1>
+ <p class="lead">Pelajari cara kerja, empat jenisnya, dan penerapannya. Setiap konsep punya simulasi yang bisa Anda coba langsung.</p><a class="btn" href="#jenis">Mulai bereksperimen</a></div>
+ <div class="glass wave"><svg viewBox="0 0 300 90" aria-label="Gelombang clock"><path d="M0 70h30V20h30v50h30V20h30v50h30V20h30v50h30V20h30v50h30V20h30" fill="none" stroke="var(--ac)" stroke-width="3"/></svg><p class="note" style="margin:6px 0 0;text-align:center">Pulsa clock: denyut yang menyerempakkan seluruh rangkaian</p></div>
+</div>
+
+<section id="dasar"><h2>Apa itu rangkaian sekuensial?</h2><p class="sub">Keluarannya bergantung pada masukan sekarang dan keadaan yang tersimpan.</p>
+<div class="cols">
+ <div class="glass card"><div class="ic">AND · OR · MUX</div><h3>Kombinasional</h3><p>Keluaran hanya ditentukan masukan saat ini. Tidak ada memori.</p></div>
+ <div class="glass card"><div class="ic">FF · Counter</div><h3>Sekuensial</h3><p>Keluaran juga bergantung pada state sebelumnya. Perlu elemen memori, yaitu latch atau flip-flop.</p></div>
+ <div class="glass card"><div class="ic">CLK ↑</div><h3>Pemicu tepi</h3><p>Flip-flop hanya berubah saat tepi clock (transisi 0→1 atau 1→0). Di luar tepi, ia menahan datanya.</p></div>
+</div></section>
+
+<section id="prinsip"><h2>Prinsip kerja: dari umpan balik ke memori</h2><p class="sub">Tiga gagasan menjelaskan hampir semua flip-flop.</p>
+<div class="cols">
+ <div class="glass card"><div class="ic">1 · Umpan balik</div><p>Keluaran sebuah gerbang disambungkan kembali ke masukan gerbang lain. Dua gerbang NOR yang saling menyilang membentuk latch SR: keluaran saling menahan, sehingga data tetap tersimpan walau masukan sudah kembali ke 0.</p></div>
+ <div class="glass card"><div class="ic">2 · Dua keadaan stabil</div><p>Rangkaian ini bistabil: Q=0 dan Q=1 sama-sama stabil. Hanya pulsa masukan (set atau reset) yang memindahkannya dari satu keadaan ke yang lain. Satu rangkaian menyimpan tepat 1 bit.</p></div>
+ <div class="glass card"><div class="ic">3 · Clock</div><p>Clock menentukan kapan masukan boleh mengubah state. Pada pemicu tepi, perubahan hanya terjadi sesaat di tepi clock, sehingga ratusan flip-flop dapat berubah serempak dan perilaku sistem bisa diprediksi.</p></div>
+</div>
+<h3 style="margin:28px 0 10px">Batas waktu dan struktur master-slave</h3>
+<div class="cols">
+ <div class="glass card"><div class="ic">Setup time</div><p>Lamanya data harus stabil <i>sebelum</i> tepi clock agar terbaca dengan benar.</p></div>
+ <div class="glass card"><div class="ic">Hold time</div><p>Lamanya data harus tetap stabil <i>setelah</i> tepi clock.</p></div>
+ <div class="glass card"><div class="ic">Delay propagasi</div><p>Jeda antara tepi clock dan perubahan Q di keluaran. Pada counter asinkron, jeda ini menumpuk di tiap tahap.</p></div>
+ <div class="glass card"><div class="ic">Metastabilitas</div><p>Bila setup atau hold dilanggar, Q bisa tertahan sesaat di tegangan antara 0 dan 1 sebelum menetap. Dua D flip-flop berseri dipakai untuk menurunkan risikonya.</p></div>
+ <div class="glass card"><div class="ic">Master-slave</div><p>Dua latch berseri dengan fase berlawanan: master terbuka saat CLK=1, slave saat CLK=0. Keluaran hanya berubah di satu tepi, sehingga race-around tertutup.</p></div>
+</div></section>
+
+<section id="jenis"><h2>Empat jenis flip-flop</h2><p class="sub">Pilih jenis, baca ringkasannya, lalu uji di simulator. Semua memakai pemicu tepi naik (↑). Q⁺ berarti nilai Q sesudah tepi clock; “Tahan” berarti Q tidak berubah.</p>
+<div class="tabs" id="tabs"><button class="tab" data-t="SR">SR</button><button class="tab" data-t="D">D</button><button class="tab on" data-t="JK">JK</button><button class="tab" data-t="T">T</button></div>
+<div class="glass sim">
+ <div><div id="sym"></div><p id="desc"></p><code class="eq" id="eq"></code><table id="tbl"></table><div id="more"></div></div>
+ <div><h3>Simulator</h3><p class="note">1) Atur masukan. 2) Tekan CLOCK. 3) Amati Q dan diagram waktu.</p>
+  <div id="ins"></div><button class="cb" id="clk">CLOCK ↑</button>
+  <div class="out"><span>Q = <b id="q">0</b><i class="led" id="lq"></i></span><span style="color:var(--mu)">Q′ = <b id="qn">1</b><i class="led on" id="lqn"></i></span></div>
+  <div class="warn" id="warn"></div>
+  <h3>Diagram waktu (10 clock terakhir)</h3><div class="tm" id="tm"></div></div>
+</div></section>
+
+<section><h2>Ringkasan perbandingan</h2><p class="sub">Pilih jenis sesuai kebutuhan rancangan.</p><div class="glass tw" style="padding:14px"><table><tr><th>Jenis</th><th>Masukan</th><th>Fungsi</th><th>Catatan</th></tr><tr><td>SR</td><td>S, R</td><td>Set, reset, tahan</td><td>S=R=1 terlarang</td></tr><tr><td>D</td><td>D</td><td>Menyalin data</td><td>Paling umum untuk register</td></tr><tr><td>JK</td><td>J, K</td><td>Set, reset, tahan, toggle</td><td>Paling fleksibel</td></tr><tr><td>T</td><td>T</td><td>Tahan atau toggle</td><td>Pembagi frekuensi, counter</td></tr></table></div></section>
+
+<section id="latch"><h2>Latch vs flip-flop</h2><p class="sub">Beda utamanya: latch peka level, flip-flop peka tepi.</p>
+<div class="glass lbl"><div><p>Naikkan CLK ke 1, lalu ubah D beberapa kali. <b>Latch</b> mengikuti D selama CLK = 1. <b>Flip-flop</b> hanya menyalin D saat CLK naik dari 0 ke 1.</p>
+<div style="display:flex;flex-direction:column;gap:10px"><button class="lb" id="bd">D <b id="vd">0</b></button><button class="lb" id="bc">CLK <b id="vc">0</b></button></div></div>
+<div class="cols" style="grid-template-columns:1fr 1fr"><div class="box"><div class="note">Latch (level)</div><div class="v" id="lat">0</div></div><div class="box"><div class="note">Flip-flop (tepi ↑)</div><div class="v" id="ff">0</div></div></div></div></section>
+
+<section id="counter"><h2>Penerapan: counter 4-bit asinkron</h2><p class="sub">Empat T flip-flop (T=1), keluaran tiap tahap menjadi clock tahap berikutnya.</p>
+<div class="glass sim"><div><p>Clock luar hanya masuk ke FF0 (bit paling kanan, LSB). Tiap FF membalik keluarannya, jadi frekuensi terbagi dua di setiap tahap. Karena perubahan merambat berurutan, efeknya disebut <b>ripple</b>: perhatikan LED menyala bergantian dari kanan ke kiri.</p><p class="note">Kekurangan: delay propagasi menumpuk di tiap tahap, sehingga kecepatan maksimum terbatas. Counter sinkron mengatasinya dengan clock bersama.</p></div>
+<div><div class="leds" id="leds"></div><div class="out" style="justify-content:center" id="cd">0000 = 0</div>
+<div class="ctrl"><button class="cb" id="ct">Clock ▶</button><button class="cb" id="ca">Auto</button><button class="cb" id="cr">Reset</button></div></div></div></section>
+
+<section id="aplikasi"><h2>Dipakai di mana?</h2><p class="sub">Hampir setiap perangkat digital memuat ribuan hingga miliaran flip-flop atau latch.</p>
+<div class="cols">
+ <div class="glass card"><div class="ic">Register</div><p>Register CPU tersusun dari D flip-flop paralel, satu per bit. Sel SRAM memakai prinsip bistabil serupa latch.</p></div>
+ <div class="glass card"><div class="ic">Counter &amp; pembagi frekuensi</div><p>T flip-flop membagi frekuensi dua per tahap. 1 kHz menjadi 500 Hz, lalu 250 Hz, dan seterusnya. Dipakai pada jam digital dan timer.</p></div>
+ <div class="glass card"><div class="ic">Debounce saklar</div><p>Latch SR menyaring pantulan kontak saklar mekanis, sehingga satu tekanan terbaca sebagai satu perubahan.</p></div>
+ <div class="glass card"><div class="ic">Sinkronisasi sinyal</div><p>Dua D flip-flop berseri menurunkan risiko metastabilitas saat sinyal luar masuk ke domain clock lain.</p></div>
+ <div class="glass card"><div class="ic">Mesin keadaan (FSM)</div><p>D flip-flop menyimpan state saat ini, misalnya fase lampu lalu lintas, dan logika kombinasional menentukan state berikutnya.</p></div>
+</div></section>
+
+
+</main>
+<footer class="glass" style="padding:16px 20px;max-width:1060px;margin:0 auto 30px"><p><b>Referensi:</b> M. Morris Mano, <i>Digital Design</i>; Thomas Floyd, <i>Digital Fundamentals</i>; Wikipedia, artikel “Flip-flop (electronics)”. Seluruh diagram dibuat inline, tanpa gambar eksternal.</p></footer>
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const T={
+SR:{ins:['S','R'],f:(q,[s,r])=>s&&r?null:s?1:r?0:q,eq:'Q⁺ = S + R′·Q  (S·R = 0)',desc:'Dua masukan: S (Set) mengisi 1 dan R (Reset) mengosongkan ke 0. Ini dasar semua flip-flop, tersusun dari dua gerbang NOR atau NAND yang saling menyilang.',w:i=>i[0]&&i[1],wt:'S=R=1 terlarang. Pada versi NOR kedua keluaran menjadi 0, dan hasil akhirnya tak dapat diprediksi saat S dan R kembali ke 0.',rows:[[0,0,'Q','Tahan'],[0,1,0,'Reset'],[1,0,1,'Set'],[1,1,'?','Terlarang']]},
+D:{ins:['D'],f:(q,[d])=>d,eq:'Q⁺ = D',desc:'Satu masukan data. Pada tepi clock, Q menyalin D lalu menahannya sampai tepi berikutnya. Inilah penyimpan 1-bit yang paling umum.',rows:[[0,0,'Salin 0'],[1,1,'Salin 1']]},
+JK:{ins:['J','K'],f:(q,[j,k])=>j&&k?1-q:j?1:k?0:q,eq:'Q⁺ = J·Q′ + K′·Q',desc:'Mirip SR, tetapi J=K=1 sah dan membalik (toggle) keluaran. Ini menutup kelemahan SR.',w:i=>i[0]&&i[1],wt:'J=K=1 membalik keluaran tiap clock. Bila dipicu level, keluaran bisa berosilasi (race-around). Karena itu dipakai pemicu tepi atau struktur master-slave.',rows:[[0,0,'Q','Tahan'],[0,1,0,'Reset'],[1,0,1,'Set'],[1,1,'Q′','Toggle']]},
+T:{ins:['T'],f:(q,[t])=>t?1-q:q,eq:'Q⁺ = T ⊕ Q',desc:'Satu masukan T. Bila T=1, keluaran berbalik di tiap clock, sehingga frekuensi clock terbagi dua. Dibuat dari JK dengan J dan K disatukan.',rows:[[0,'Q','Tahan'],[1,'Q′','Toggle']]}};
+const MORE={
+SR:`<h3>Cara kerja</h3><p>Dua gerbang NOR saling menyilang: keluaran gerbang pertama masuk ke gerbang kedua dan sebaliknya. S=1 memaksa Q menjadi 1, R=1 memaksa Q menjadi 0. Saat S=R=0, umpan balik menahan nilai terakhir.</p><h3>Kelebihan dan kekurangan</h3><p>Paling sederhana dan cepat. Namun ada kombinasi terlarang (S=R=1), jadi perancang harus memastikan keduanya tak pernah aktif bersamaan.</p><h3>Contoh pemakaian</h3><p>Penyaring pantulan saklar (debounce) dan blok dasar untuk membangun flip-flop lain.</p>`,
+D:`<h3>Cara kerja</h3><p>D flip-flop setara SR dengan S diisi D dan R diisi D′ (kebalikan D). Karena S dan R tak pernah sama, kondisi terlarang hilang. Pada tepi clock, nilai D disampel lalu disimpan.</p><h3>Kelebihan dan kekurangan</h3><p>Mudah dipakai dan tanpa kombinasi terlarang. Untuk menahan data selama banyak clock, dibutuhkan sinyal enable atau D disambung ke Q.</p><h3>Contoh pemakaian</h3><p>Register, penyimpan data sementara, penunda satu clock, dan penyinkron sinyal. Pada desain sinkron modern, D adalah jenis yang paling umum.</p>`,
+JK:`<h3>Cara kerja</h3><p>JK menambahkan umpan balik Q dan Q′ ke masukan SR. Hasilnya, J=K=1 tidak lagi terlarang: keluaran berbalik. J=1,K=0 men-set, J=0,K=1 me-reset, J=K=0 menahan.</p><h3>Kelebihan dan kekurangan</h3><p>Paling fleksibel karena mencakup fungsi SR, toggle, dan tahan. Pada versi pemicu level, mode toggle berisiko race-around, sehingga dipakai master-slave atau pemicu tepi.</p><h3>Contoh pemakaian</h3><p>Counter dan pembagi frekuensi pada rangkaian TTL klasik, misalnya IC seri 74 seperti 7476.</p>`,
+T:`<h3>Cara kerja</h3><p>T flip-flop biasanya dibuat dari JK dengan J=K=T, atau dari D dengan D = T ⊕ Q. T=1 membalik keluaran di tiap tepi clock, T=0 menahan.</p><h3>Kelebihan dan kekurangan</h3><p>Ideal untuk menghitung karena satu tahap membagi frekuensi dengan 2, dan n tahap membaginya dengan 2ⁿ. Fungsinya terbatas pada tahan dan toggle.</p><h3>Contoh pemakaian</h3><p>Pembagi frekuensi dan counter, seperti demo counter 4-bit di bawah.</p>`};
+let ty='JK',inp=[],q=0,hist=[],bad=false;
+function sym(){const n=T[ty].ins.length,h=n==2?130:100,ys=n==2?[50,90]:[50],c=h,t=(x,y,s,a='start')=>`<text x="${x}" y="${y+5}" font-family="Fira Code,monospace" font-size="15" fill="currentColor" text-anchor="${a}">${s}</text>`;
+return `<svg viewBox="0 0 230 ${h+40}" role="img" aria-label="Simbol ${ty} flip-flop"><rect x="70" y="20" width="90" height="${h}" rx="6" fill="none" stroke="var(--ac)" stroke-width="2.5"/>`+
+ys.map((y,i)=>`<line x1="30" y1="${y}" x2="70" y2="${y}" stroke="currentColor" stroke-width="2"/>`+t(8,y,T[ty].ins[i])).join('')+
+`<line x1="30" y1="${c}" x2="70" y2="${c}" stroke="currentColor" stroke-width="2"/><path d="M70 ${c-8}l12 8-12 8" fill="none" stroke="var(--ac)" stroke-width="2"/>`+t(0,c,'CLK')+
+`<line x1="160" y1="50" x2="205" y2="50" stroke="currentColor" stroke-width="2"/><line x1="160" y1="${c}" x2="205" y2="${c}" stroke="currentColor" stroke-width="2"/>`+t(212,50,'Q')+t(212,c,'Q̅')+t(115,h/2+25,ty,'middle').replace('15"','20" font-weight="600"')+`</svg>`}
+function render(){const t=T[ty];q=0;hist=[];bad=false;inp=t.ins.map(()=>0);
+$('#sym').innerHTML=sym();$('#more').innerHTML=MORE[ty];$('#desc').textContent=t.desc;$('#eq').textContent=t.eq;
+$('#tbl').innerHTML='<tr>'+t.ins.map(x=>`<th>${x}</th>`).join('')+'<th>Q⁺</th><th>Arti</th></tr>'+t.rows.map(r=>`<tr data-k="${r.slice(0,t.ins.length).join('')}">`+r.map(c=>`<td>${c}</td>`).join('')+'</tr>').join('');
+$('#ins').innerHTML=t.ins.map((x,i)=>`<button class="lb" data-i="${i}">${x}<b>0</b></button>`).join('');paint();draw()}
+function paint(){const t=T[ty],w=t.w&&t.w(inp);$('#q').textContent=bad?'?':q;$('#qn').textContent=bad?'?':1-q;
+$('#lq').classList.toggle('on',!bad&&q==1);$('#lqn').classList.toggle('on',!bad&&q==0);
+const e=$('#warn');e.textContent=w?t.wt:'';e.classList.remove('show');if(w){void e.offsetWidth;e.classList.add('show')}
+$('#clk').classList.toggle('ready',!!w);$$('#tbl tr[data-k]').forEach(r=>r.classList.toggle('hl',r.dataset.k==inp.join('')))}
+function draw(){const t=T[ty];if(!hist.length){$('#tm').innerHTML='<p class="note" style="margin:8px">Tekan CLOCK untuk mulai merekam.</p>';return}
+const R=[['CLK',hist.flatMap(()=>[0,1])],...t.ins.map((x,k)=>[x,hist.flatMap(h=>[h.i[k],h.i[k]])]),['Q',hist.flatMap(h=>[h.p,h.q])]];
+const W=48+hist.length*36+8;let s=`<svg width="${W}" height="${R.length*34+6}" role="img" aria-label="Diagram waktu">`;
+R.forEach(([n,v],r)=>{let d='',py;v.forEach((y,j)=>{const x=48+j*18,yy=r*34+(y?8:26);d+=j?`L${x} ${py}L${x} ${yy}`:`M${x} ${yy}`;py=yy});d+=`L${48+v.length*18} ${py}`;
+s+=`<text x="2" y="${r*34+22}" font-family="Fira Code,monospace" font-size="13" fill="var(--mu)">${n}</text><path d="${d}" fill="none" stroke="${n=='Q'?'var(--ac)':'var(--mu)'}" stroke-width="2"/>`});
+$('#tm').innerHTML=s+'</svg>'}
+$('#tabs').onclick=e=>{const b=e.target.closest('.tab');if(!b)return;ty=b.dataset.t;$$('.tab').forEach(x=>x.classList.toggle('on',x===b));render()};
+$('#ins').onclick=e=>{const b=e.target.closest('.lb');if(!b)return;const i=+b.dataset.i;inp[i]^=1;b.querySelector('b').textContent=inp[i];paint()};
+$('#clk').onclick=()=>{const p=q,n=T[ty].f(q,inp);bad=n===null;if(!bad)q=n;hist.push({i:[...inp],p,q});if(hist.length>10)hist.shift();paint();draw()};
+// Latch vs FF
+let D=0,C=0,lq=0,fq=0;const lp=r=>{if(C)lq=D;if(r)fq=D;$('#vd').textContent=D;$('#vc').textContent=C;$('#lat').textContent=lq;$('#ff').textContent=fq};
+$('#bd').onclick=()=>{D^=1;lp(0)};$('#bc').onclick=()=>{C^=1;lp(C)};
+// Counter
+let n=0,au=null;const hx=()=>$('#cd').textContent=n.toString(2).padStart(4,'0')+' = '+n;
+$('#leds').innerHTML=[3,2,1,0].map(i=>`<div><i class="led" id="c${i}"></i>Q${i}</div>`).join('');
+function tick(){const o=n;n=(n+1)%16;for(let i=0;i<4;i++)if(((o^n)>>i)&1)setTimeout(()=>$('#c'+i).classList.toggle('on',!!((n>>i)&1)),i*170);setTimeout(hx,520)}
+$('#ct').onclick=tick;$('#cr').onclick=()=>{n=0;$$('#leds .led').forEach(l=>l.classList.remove('on'));hx()};
+$('#ca').onclick=e=>{if(au){clearInterval(au);au=null;e.target.textContent='Auto'}else{au=setInterval(tick,1100);e.target.textContent='Stop'}};
+// Latar: bintang + mesin neon (SVG inline)
+(function(){let s='';for(let i=0;i<140;i++){s+=`<circle cx="${Math.random()*1000|0}" cy="${Math.random()*1000|0}" r="${(Math.random()*1.4+.3).toFixed(1)}" fill="var(--ac)" opacity="${(Math.random()*.6+.25).toFixed(2)}" class="st" style="animation-delay:-${(Math.random()*4).toFixed(1)}s"/>`}
+const gear=(R,n)=>{const p=[],u=2*Math.PI/n;for(let k=0;k<n;k++)[[0,.8],[.15,1],[.45,1],[.6,.8]].forEach(([o,f])=>{const a=(k+o)*u;p.push((R*f*Math.cos(a)).toFixed(1)+' '+(R*f*Math.sin(a)).toFixed(1))});return 'M'+p.join('L')+'Z'};
+let pins='';for(let i=0;i<5;i++){const x=745+i*35;pins+=`M${x} 620v-16M${x} 750v16`}for(let i=0;i<3;i++){const y=645+i*35;pins+=`M720 ${y}h-16M910 ${y}h16`}
+$('#bg').innerHTML=`<svg viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMid slice"><defs><filter id="gl" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>${s}<g class="nm" fill="none" stroke-width="3"><g transform="translate(160 840)" stroke="var(--ac)"><path class="gr" d="${gear(130,16)}"/><circle r="40"/></g><g transform="translate(345 735)" stroke="#e040fb"><path class="gr rv" d="${gear(70,10)}"/><circle r="20"/></g><g stroke="#e040fb"><rect x="720" y="620" width="190" height="130" rx="10"/><rect x="755" y="650" width="120" height="70" rx="4" stroke="var(--ac)"/><path d="${pins}"/></g><path class="tr" d="M704 680H600V560H480M815 766V900H620M926 680H980" stroke="var(--ac)"/></g></svg>`})();
+render();
+</script>
+</body>
+</html>
